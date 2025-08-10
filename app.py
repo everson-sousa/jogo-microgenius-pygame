@@ -381,6 +381,6 @@ def game_loop():
 
     pygame.quit()
 
-# --- INICIA O JOGO ---
+# -------------------------------------- INICIA O JOGO -------------------------------
 if __name__ == "__main__":
     game_loop()
