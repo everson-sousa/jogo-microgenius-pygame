@@ -1,13 +1,11 @@
-# Arquivos de cache do Python
+# Caches do Python e do Pygbag
 __pycache__/
-*.pyc
+web-cache/
+version.txt
 
 # Ambientes virtuais
 venv/
 *venv/
-env/
-*env/
-mvenv/
 
-# Arquivos do editor VS Code
+# Arquivos do editor
 .vscode/
