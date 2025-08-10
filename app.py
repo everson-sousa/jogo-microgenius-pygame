@@ -199,6 +199,8 @@ import os
 import time
 from pathlib import Path  # <-- 1. Importa a biblioteca
 
+print("[DEBUG] app.py IMPORTADO COM SUCESSO")
+
 # ---------------- CONFIGURAÇÕES ---------------- #
 LARGURA, ALTURA = 600, 600
 FPS = 60
