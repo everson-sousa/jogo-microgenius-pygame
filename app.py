@@ -245,7 +245,7 @@ except pygame.error:
         def play(self): pass
     sons = [SomFalso(), SomFalso(), SomFalso(), SomFalso()]
 
-# ---------------- FUNÇÕES AUXILIARES ---------------- #
+# ---------------- FUNÇÕES AUXILIARES ---------------------#
 # (O resto das funções não muda)
 def carregar_recorde():
     if not os.path.exists(ARQUIVO_RECORDE): return 0
