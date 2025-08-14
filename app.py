@@ -2,13 +2,19 @@
 # from random import randrange
 # import os
 # import time
+# from pathlib import Path  # <-- 1. Importa a biblioteca
+
+# print("[DEBUG] app.py IMPORTADO COM SUCESSO")
 
 # # ---------------- CONFIGURAÇÕES ---------------- #
 # LARGURA, ALTURA = 600, 600
 # FPS = 60
-# ARQUIVO_RECORDE = "recorde.txt"
 
-# # Timers para a sequência em milissegundos
+# # --- CAMINHOS DE ARQUIVO ROBUSTOS ---
+# # Define o diretório base do projeto
+# BASE_DIR = Path(__file__).resolve().parent
+# ARQUIVO_RECORDE = BASE_DIR / "recorde.txt" # <-- 2. Usa o caminho base
+
 # TEMPO_LUZ_ACESA = 600
 # TEMPO_LUZ_APAGADA = 200
 # TEMPO_ESPERA_INICIAL = 800
@@ -31,9 +37,12 @@
 # clock = pygame.time.Clock()
 
 # try:
+#     # <-- 3. Usa o caminho base para os sons
 #     sons = [
-#         pygame.mixer.Sound("sons/som_verde.wav"), pygame.mixer.Sound("sons/som_vermelho.wav"),
-#         pygame.mixer.Sound("sons/som_amarelo.wav"), pygame.mixer.Sound("sons/som_azul.wav")
+#         pygame.mixer.Sound(BASE_DIR / "sons" / "som_verde.wav"),
+#         pygame.mixer.Sound(BASE_DIR / "sons" / "som_vermelho.wav"),
+#         pygame.mixer.Sound(BASE_DIR / "sons" / "som_amarelo.wav"),
+#         pygame.mixer.Sound(BASE_DIR / "sons" / "som_azul.wav")
 #     ]
 # except pygame.error:
 #     print("Aviso: Arquivos de som não encontrados. O jogo rodará sem som.")
@@ -41,7 +50,8 @@
 #         def play(self): pass
 #     sons = [SomFalso(), SomFalso(), SomFalso(), SomFalso()]
 
-# # ---------------- FUNÇÕES AUXILIARES ---------------- #
+# # ---------------- FUNÇÕES AUXILIARES ---------------------#
+# # (O resto das funções não muda)
 # def carregar_recorde():
 #     if not os.path.exists(ARQUIVO_RECORDE): return 0
 #     with open(ARQUIVO_RECORDE, "r") as f:
@@ -99,7 +109,6 @@
 #     sequencia, resposta_jogador = [], []
 #     estado = "INICIO"
     
-#     # --- Variáveis de controle para a sequência não-bloqueante ---
 #     indice_da_sequencia = 0
 #     tempo_proxima_acao = 0
 #     luz_acesa = False
@@ -108,7 +117,6 @@
 #         clock.tick(FPS)
 #         agora = pygame.time.get_ticks()
         
-#         # --- PROCESSAMENTO DE EVENTOS ---
 #         for event in pygame.event.get():
 #             if event.type == pygame.QUIT:
 #                 rodando = False
@@ -135,8 +143,6 @@
 #                             indice_da_sequencia = 0
 #                             tempo_proxima_acao = agora + TEMPO_ESPERA_INICIAL
         
-#         # --- LÓGICA DE ATUALIZAÇÃO E DESENHO ---
-        
 #         cor_ativa_desenho = None
 #         mensagem_tela = None
 
@@ -148,17 +154,17 @@
 #         elif estado == "MOSTRANDO":
 #             pontos = len(sequencia)
 #             if agora > tempo_proxima_acao:
-#                 if luz_acesa: # Se a luz estava acesa, apaga
+#                 if luz_acesa:
 #                     luz_acesa = False
 #                     indice_da_sequencia += 1
 #                     tempo_proxima_acao = agora + TEMPO_LUZ_APAGADA
-#                 else: # Se estava apagada, acende a próxima (ou termina)
+#                 else:
 #                     if indice_da_sequencia < len(sequencia):
 #                         luz_acesa = True
 #                         cor_para_mostrar = sequencia[indice_da_sequencia]
 #                         tocar_som(cor_para_mostrar)
 #                         tempo_proxima_acao = agora + TEMPO_LUZ_ACESA
-#                     else: # Acabou a sequência
+#                     else:
 #                         estado = "JOGANDO"
             
 #             if luz_acesa:
@@ -189,7 +195,7 @@
 
 #     pygame.quit()
 
-# # -------------------------------------- INICIA O JOGO -------------------------------
+# # --- INICIA O JOGO ---
 # if __name__ == "__main__":
 #     game_loop()
 
@@ -197,18 +203,15 @@ import pygame
 from random import randrange
 import os
 import time
-from pathlib import Path  # <-- 1. Importa a biblioteca
-
-print("[DEBUG] app.py IMPORTADO COM SUCESSO")
+from pathlib import Path
 
 # ---------------- CONFIGURAÇÕES ---------------- #
 LARGURA, ALTURA = 600, 600
 FPS = 60
 
 # --- CAMINHOS DE ARQUIVO ROBUSTOS ---
-# Define o diretório base do projeto
 BASE_DIR = Path(__file__).resolve().parent
-ARQUIVO_RECORDE = BASE_DIR / "recorde.txt" # <-- 2. Usa o caminho base
+ARQUIVO_RECORDE = BASE_DIR / "recorde.txt"
 
 TEMPO_LUZ_ACESA = 600
 TEMPO_LUZ_APAGADA = 200
@@ -225,28 +228,20 @@ CORES_CLARO = [VERDE_CLARO, VERMELHO_CLARO, AMARELO_CLARO, AZUL_CLARO]
 
 # ---------------- INICIALIZAÇÃO DO PYGAME ---------------- #
 pygame.init()
-pygame.mixer.init()
+# pygame.mixer.init() # <-- ALTERAÇÃO 1: Módulo de som desativado
 window = pygame.display.set_mode((LARGURA, ALTURA))
 pygame.display.set_caption("Micro Genius")
 fonte = pygame.font.SysFont("Comic Sans MS", 30)
 clock = pygame.time.Clock()
 
-try:
-    # <-- 3. Usa o caminho base para os sons
-    sons = [
-        pygame.mixer.Sound(BASE_DIR / "sons" / "som_verde.wav"),
-        pygame.mixer.Sound(BASE_DIR / "sons" / "som_vermelho.wav"),
-        pygame.mixer.Sound(BASE_DIR / "sons" / "som_amarelo.wav"),
-        pygame.mixer.Sound(BASE_DIR / "sons" / "som_azul.wav")
-    ]
-except pygame.error:
-    print("Aviso: Arquivos de som não encontrados. O jogo rodará sem som.")
-    class SomFalso:
-        def play(self): pass
-    sons = [SomFalso(), SomFalso(), SomFalso(), SomFalso()]
+# --- Carregar Sons ---
+# <-- ALTERAÇÃO 2: Carregamento de sons completamente desativado para o teste
+class SomFalso:
+    def play(self): pass
+sons = [SomFalso(), SomFalso(), SomFalso(), SomFalso()]
 
-# ---------------- FUNÇÕES AUXILIARES ---------------------#
-# (O resto das funções não muda)
+# ---------------- FUNÇÕES AUXILIARES ---------------- #
+
 def carregar_recorde():
     if not os.path.exists(ARQUIVO_RECORDE): return 0
     with open(ARQUIVO_RECORDE, "r") as f:
@@ -254,12 +249,15 @@ def carregar_recorde():
         except: return 0
 def salvar_recorde(r):
     with open(ARQUIVO_RECORDE, "w") as f: f.write(str(r))
-def tocar_som(index): sons[index].play()
+    
+def tocar_som(index):
+    # Esta função agora não fará nada, pois usa a classe SomFalso
+    sons[index].play()
 
 def desenhar_tela(pontos, recorde, cor_ativa=None, hover_centro=False, msg=None):
     window.fill(BRANCO)
     cores_a_usar = CORES_ESCURO.copy()
-    if cor_ativa is not None:
+    if cor_ativa is not None and 0 <= cor_ativa < len(CORES_CLARO):
         cores_a_usar[cor_ativa] = CORES_CLARO[cor_ativa]
 
     pygame.draw.rect(window, cores_a_usar[0], (100, 100, 200, 200))
